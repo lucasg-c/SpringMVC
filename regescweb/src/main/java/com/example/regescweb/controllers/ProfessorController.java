@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -33,5 +34,16 @@ public class ProfessorController {
         ModelAndView mv = new ModelAndView("professores/new");
         mv.addObject("statusProfessor", StatusProfessor.values());
         return mv;
+    }
+
+    @PostMapping("/professores")
+    public String create(Professor professor)
+    {
+        System.out.println("Testando redirect no terminal.");
+        System.out.println();
+        System.out.println(professor);
+        System.out.println();
+
+        return "redirect:/professores";
     }
 }

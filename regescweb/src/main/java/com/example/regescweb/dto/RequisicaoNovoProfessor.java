@@ -3,11 +3,18 @@ package com.example.regescweb.dto;
 import com.example.regescweb.models.Professor;
 import com.example.regescweb.models.StatusProfessor;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 //Data Transfer Object class
 public class RequisicaoNovoProfessor {
+    @NotBlank
+    @NotNull
     private String nome;
+    @NotNull
+    @DecimalMin(value="0.0")
     private BigDecimal salario;
     private StatusProfessor statusProfessor;
 

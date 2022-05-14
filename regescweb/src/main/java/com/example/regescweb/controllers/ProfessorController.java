@@ -1,5 +1,6 @@
 package com.example.regescweb.controllers;
 
+import com.example.regescweb.dto.RequisicaoNovoProfessor;
 import com.example.regescweb.models.Professor;
 import com.example.regescweb.models.StatusProfessor;
 import com.example.regescweb.repositories.ProfessorRepository;
@@ -37,12 +38,16 @@ public class ProfessorController {
     }
 
     @PostMapping("/professores")
-    public String create(Professor professor)
+    public String create(RequisicaoNovoProfessor requisicao)
     {
+        Professor professor = requisicao.toProfessor();
         System.out.println("Testando redirect no terminal.");
+        System.out.println();
+        System.out.println(requisicao);
         System.out.println();
         System.out.println(professor);
         System.out.println();
+        this.professorRepository.save(professor);
 
         return "redirect:/professores";
     }

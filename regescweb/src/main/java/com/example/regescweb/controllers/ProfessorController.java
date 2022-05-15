@@ -106,4 +106,35 @@ public class ProfessorController {
             return new ModelAndView("redirect:/professores");
         }
     }
+
+    @PostMapping("/{id}")
+    public ModelAndView update(@PathVariable Long id, @Valid RequisicaoFormProfessor requisicao, BindingResult bindingResult)
+    {
+        if (bindingResult.hasErrors())
+        {
+            System.out.println("\n=-=-=-Erros no formulário=-=-=-=\n");
+            ModelAndView mv = new ModelAndView("professores/edit");
+            mv.addObject("professorId", id);
+            mv.addObject("listaStatusProfessor", StatusProfessor.values());
+
+            return mv;
+        }
+        else
+        {
+            Optional<Professor> optional = this.professorRepository.findById(id);
+            if (optional.isPresent())
+            {
+                Professor professor = requisicao.toProfessor(optional.get());
+                System.out.println(professor);
+                this.professorRepository.save(professor);
+
+                return new ModelAndView("redirect:/professores/" + professor.getId());
+            }
+            else
+            {
+                System.out.println("#-#-#-#-Não achou o objeto de ID " + id + " .=-=-=-=");
+                return new ModelAndView("redirect:/professores");
+            }
+        }
+    }
 }

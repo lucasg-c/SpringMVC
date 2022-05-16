@@ -5,6 +5,7 @@ import com.example.regescweb.models.Professor;
 import com.example.regescweb.models.StatusProfessor;
 import com.example.regescweb.repositories.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -135,6 +136,21 @@ public class ProfessorController {
                 System.out.println("#-#-#-#-Não achou o objeto de ID " + id + " .=-=-=-=");
                 return new ModelAndView("redirect:/professores");
             }
+        }
+    }
+
+    @GetMapping("/{id}/delete")
+    public String delete(@PathVariable Long id) {
+        System.out.println("=-=-=-=-=ID a ser deletado: " + id + " =-=-=-=-=-=");
+        try
+        {
+            this.professorRepository.deleteById(id);
+            return "redirect:/professores";
+        }
+        catch (EmptyResultDataAccessException e)
+        {
+            System.out.println(e);
+            return "redirect:/professores";
         }
     }
 }

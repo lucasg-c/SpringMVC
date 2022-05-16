@@ -5,6 +5,7 @@ import com.example.regescweb.models.Professor;
 import com.example.regescweb.models.StatusProfessor;
 import com.example.regescweb.repositories.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -80,11 +81,8 @@ public class ProfessorController {
         else
         {
             System.out.println("=-=-=-=Não achou o objeto de ID " + id + " .=-=-=-=");
-            return new ModelAndView("redirect:/professores");
+            return this.retornaErroProfessor("VIEWING ERROR: Professor #" + id + " não existente na base de dados.");
         }
-//        ModelAndView mv = new ModelAndView("professores/show");
-//
-//        return mv;
     }
 
     @GetMapping("/{id}/edit")
@@ -104,7 +102,7 @@ public class ProfessorController {
         else
         {
             System.out.println("=-=-=-=Não achou o objeto de ID " + id + " .=-=-=-=");
-            return new ModelAndView("redirect:/professores");
+            return this.retornaErroProfessor("EDIT ERROR: Professor #" + id + " não existente na base de dados.");
         }
     }
 
@@ -134,23 +132,35 @@ public class ProfessorController {
             else
             {
                 System.out.println("#-#-#-#-Não achou o objeto de ID " + id + " .=-=-=-=");
-                return new ModelAndView("redirect:/professores");
+                return this.retornaErroProfessor("UPDATE ERROR: Professor #" + id + " não existente na base de dados.");
             }
         }
     }
 
     @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    public ModelAndView delete(@PathVariable Long id) {
+        ModelAndView mv = new ModelAndView("redirect:/professores");
         System.out.println("=-=-=-=-=ID a ser deletado: " + id + " =-=-=-=-=-=");
         try
         {
             this.professorRepository.deleteById(id);
-            return "redirect:/professores";
+            mv.addObject("mensagem", "Professor #" + id + " deletado com sucesso.");
+            mv.addObject("erro", false);
         }
         catch (EmptyResultDataAccessException e)
         {
             System.out.println(e);
-            return "redirect:/professores";
+            mv = this.retornaErroProfessor("DELETE ERROR: Professor #" + id + " não existente na base de dados.");
         }
+
+        return mv;
+    }
+
+    private ModelAndView retornaErroProfessor(String msg)
+    {
+        ModelAndView mv = new ModelAndView("redirect:/professores");
+        mv.addObject("mensagem", msg);
+        mv.addObject("erro", true);
+        return mv;
     }
 }
